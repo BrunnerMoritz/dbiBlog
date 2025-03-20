@@ -1,0 +1,288 @@
+use blogDB
+... 
+switched to db blogDB
+blogDB> db.BlogUsers.insertMany([
+...     { username: "john_doe", name: { firstname: "John", lastname: "Doe" }, email: "john@example.com", password: "123456" },
+...     { username: "jane_smith", name: { firstname: "Jane", lastname: "Smith" }, email: "jane@example.com", password: "654321" },
+...     { username: "admin", name: { firstname: "Admin", lastname: "User" }, email: "admin@example.com", password: "adminpass" },
+...     { username: "guest", name: { firstname: "Guest", lastname: "User" }, email: "guest@example.com", password: "guestpass" },
+...     { username: "alice_wonder", name: { firstname: "Alice", lastname: "Wonder" }, email: "alice@example.com", password: "alicepass" }
+... ])
+... 
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('67dbe01a7f7f85125051e944'),
+    '1': ObjectId('67dbe01a7f7f85125051e945'),
+    '2': ObjectId('67dbe01a7f7f85125051e946'),
+    '3': ObjectId('67dbe01a7f7f85125051e947'),
+    '4': ObjectId('67dbe01a7f7f85125051e948')
+  }
+}
+blogDB> db.BlogEntries.insertMany([
+...     {
+...         title: "Mein erster Blogpost",
+...         author: "john_doe",
+...         description: "Ein einfacher Testbeitrag",
+...         creationDate: new Date(),
+...         editDates: [],
+...         impressionCount: 0,
+...         content: "Hallo Welt!",
+...         commentsAllowed: true
+...     },
+...     {
+...         title: "MongoDB Einführung",
+...         author: "jane_smith",
+...         description: "Grundlagen von MongoDB",
+...         creationDate: new Date(),
+...         editDates: [],
+...         impressionCount: 0,
+...         content: "Hier lernst du alles über MongoDB.",
+...         commentsAllowed: true
+...     }
+... ])
+... 
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('67dbe0237f7f85125051e949'),
+    '1': ObjectId('67dbe0237f7f85125051e94a')
+  }
+}
+blogDB> db.BlogCategories.insertMany([
+...     { name: "Technologie" },
+...     { name: "Persönlich" },
+...     { name: "Reisen" }
+... ])
+... 
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('67dbe02a7f7f85125051e94b'),
+    '1': ObjectId('67dbe02a7f7f85125051e94c'),
+    '2': ObjectId('67dbe02a7f7f85125051e94d')
+  }
+}
+blogDB> db.Comments.insertMany([
+...     { blogEntryTitle: "Mein erster Blogpost", author: "alice_wonder", content: "Toller Beitrag!", creationDate: new Date() },
+...     { blogEntryTitle: "MongoDB Einführung", author: "guest", content: "Danke für die Infos!", creationDate: new Date() }
+... ])
+... 
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('67dbe02e7f7f85125051e94e'),
+    '1': ObjectId('67dbe02e7f7f85125051e94f')
+  }
+}
+blogDB> 
+
+blogDB> 
+
+blogDB> 
+
+blogDB> 
+
+blogDB> db.BlogUsers.find().pretty()
+... 
+[
+  {
+    _id: ObjectId('67dbe01a7f7f85125051e944'),
+    username: 'john_doe',
+    name: { firstname: 'John', lastname: 'Doe' },
+    email: 'john@example.com',
+    password: '123456'
+  },
+  {
+    _id: ObjectId('67dbe01a7f7f85125051e945'),
+    username: 'jane_smith',
+    name: { firstname: 'Jane', lastname: 'Smith' },
+    email: 'jane@example.com',
+    password: '654321'
+  },
+  {
+    _id: ObjectId('67dbe01a7f7f85125051e946'),
+    username: 'admin',
+    name: { firstname: 'Admin', lastname: 'User' },
+    email: 'admin@example.com',
+    password: 'adminpass'
+  },
+  {
+    _id: ObjectId('67dbe01a7f7f85125051e947'),
+    username: 'guest',
+    name: { firstname: 'Guest', lastname: 'User' },
+    email: 'guest@example.com',
+    password: 'guestpass'
+  },
+  {
+    _id: ObjectId('67dbe01a7f7f85125051e948'),
+    username: 'alice_wonder',
+    name: { firstname: 'Alice', lastname: 'Wonder' },
+    email: 'alice@example.com',
+    password: 'alicepass'
+  }
+]
+blogDB> db.BlogEntries.find().pretty()
+... 
+[
+  {
+    _id: ObjectId('67dbe0237f7f85125051e949'),
+    title: 'Mein erster Blogpost',
+    author: 'john_doe',
+    description: 'Ein einfacher Testbeitrag',
+    creationDate: ISODate('2025-03-20T09:30:11.350Z'),
+    editDates: [],
+    impressionCount: 0,
+    content: 'Hallo Welt!',
+    commentsAllowed: true
+  },
+  {
+    _id: ObjectId('67dbe0237f7f85125051e94a'),
+    title: 'MongoDB Einführung',
+    author: 'jane_smith',
+    description: 'Grundlagen von MongoDB',
+    creationDate: ISODate('2025-03-20T09:30:11.350Z'),
+    editDates: [],
+    impressionCount: 0,
+    content: 'Hier lernst du alles über MongoDB.',
+    commentsAllowed: true
+  }
+]
+blogDB> db.BlogEntries.find({ author: "john_doe" }).pretty()
+... 
+[
+  {
+    _id: ObjectId('67dbe0237f7f85125051e949'),
+    title: 'Mein erster Blogpost',
+    author: 'john_doe',
+    description: 'Ein einfacher Testbeitrag',
+    creationDate: ISODate('2025-03-20T09:30:11.350Z'),
+    editDates: [],
+    impressionCount: 0,
+    content: 'Hallo Welt!',
+    commentsAllowed: true
+  }
+]
+blogDB> db.BlogEntries.aggregate([
+...     { $lookup: { from: "Comments", localField: "title", foreignField: "blogEntryTitle", as: "comments" } },
+...     { $match: { "comments.1": { $exists: true } } }
+... ]).pretty()
+... 
+
+blogDB> db.blogentries.find().pretty()
+... 
+
+blogDB> db.blogentries.find().pretty()
+
+blogDB> db.Blogentries.find().pretty()
+
+blogDB> db.BlogEntries.find().pretty()
+[
+  {
+    _id: ObjectId('67dbe0237f7f85125051e949'),
+    title: 'Mein erster Blogpost',
+    author: 'john_doe',
+    description: 'Ein einfacher Testbeitrag',
+    creationDate: ISODate('2025-03-20T09:30:11.350Z'),
+    editDates: [],
+    impressionCount: 0,
+    content: 'Hallo Welt!',
+    commentsAllowed: true
+  },
+  {
+    _id: ObjectId('67dbe0237f7f85125051e94a'),
+    title: 'MongoDB Einführung',
+    author: 'jane_smith',
+    description: 'Grundlagen von MongoDB',
+    creationDate: ISODate('2025-03-20T09:30:11.350Z'),
+    editDates: [],
+    impressionCount: 0,
+    content: 'Hier lernst du alles über MongoDB.',
+    commentsAllowed: true
+  }
+]
+blogDB> db.Blog
+db.BlogEntries     db.BlogCategories  db.blogentries     db.BlogUsers
+
+blogDB> db.BlogE
+db.BlogEntries  db.blogentries
+
+blogDB> db.BlogEntr
+db.BlogEntries  db.blogentries
+
+blogDB> db.BlogEntries.insertOne(   {
+... ...         title: "Emils Geschichte",
+... ...         author: "emil_avdic",
+... ...         description: "Real madrid is besser als bayern",
+... ...         creationDate: new Date(),
+... ...         editDates: [],
+... ...         impressionCount: 0,
+... ...         content: "Hallo Welt!",
+... ...         commentsAllowed: true
+... ...     })
+Uncaught:
+SyntaxError: Unexpected token, expected "," (2:17)
+
+  1 | db.BlogEntries.insertOne(   {
+> 2 | ...         title: "Emils Geschichte",
+    |                  ^
+  3 | ...         author: "emil_avdic",
+  4 | ...         description: "Real madrid is besser als bayern",
+  5 | ...         creationDate: new Date(),
+
+blogDB>    {
+... ...         "title": "Emils Geschichte",
+... ...         author: "emil_avdic",
+... ...         description: "Real madrid is besser als bayern",
+... ...         creationDate: new Date(),
+... ...         editDates: [],
+... ...         impressionCount: 0,
+... ...         content: "Hallo Welt!",
+... ...         commentsAllowed: true
+... ...     }
+Uncaught:
+SyntaxError: Unexpected token (2:0)
+
+  1 |    {
+> 2 | ...         "title": "Emils Geschichte",
+    | ^
+  3 | ...         author: "emil_avdic",
+  4 | ...         description: "Real madrid is besser als bayern",
+  5 | ...         creationDate: new Date(),
+
+blogDB> db.BlogEntries.insertOne(   {
+... ...         "title": "Emils Geschichte",
+... ...         author: "emil_avdic",
+... ...         description: "Real madrid is besser als bayern",
+... ...         creationDate: new Date(),
+... ...         editDates: [],
+... ...         impressionCount: 0,
+... ...         content: "Hallo Welt!",
+... ...         commentsAllowed: true
+... ...     })
+Uncaught:
+SyntaxError: Unexpected token, expected "," (2:19)
+
+  1 | db.BlogEntries.insertOne(   {
+> 2 | ...         "title": "Emils Geschichte",
+    |                    ^
+  3 | ...         author: "emil_avdic",
+  4 | ...         description: "Real madrid is besser als bayern",
+  5 | ...         creationDate: new Date(),
+
+blogDB> db.BlogEntries.insertOne({
+...     title: "Emils Geschichte",
+...     author: "emil_avdic",
+...     description: "Real Madrid ist besser als Bayern",
+...     creationDate: new Date(),
+...     editDates: [],
+...     impressionCount: 0,
+...     content: "Hallo Welt!",
+...     commentsAllowed: true
+... })
+... 
+{
+  acknowledged: true,
+  insertedId: ObjectId('67dbee6b7f7f85125051e950')
+}
+
